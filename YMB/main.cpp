@@ -133,15 +133,16 @@ void Node::Move()
     cout<<" "<<movefrom<<endl;
 }
 
-
-
-int main(int argc, const char * argv[])
+void Show(Node *p)
 {
-    srand((unsigned)time(0));
     int i,j,k;
-    Node p[MaxPnum];
     for(k=0;k<pnum;k++)
-        cout<<p[k].GetM()<<" "<<p[k].GetN()<<" "<<p[k].GetNodeNo()<<endl;
+    {
+        cout<<"("<<p[k].GetM()<<","<<p[k].GetN()<<")"<<p[k].GetNodeNo()<<"-";
+        for(i=0;i<p[k].Getinfnum();i++)
+            cout<<p[k].inf[i];
+        cout<<endl;
+    }
     for(i=0;i<row;i++)
         for(j=0;j<col;j++)
         {
@@ -156,11 +157,11 @@ int main(int argc, const char * argv[])
         {
             cout<<RoadNode[i][j];
             if(j!=col-1)
-            {
                 cout<<"  ";
-                if(RoadNode[i][j]<10)
-                    cout<<" ";
-            }
+            if(RoadNode[i][j]<100)
+                cout<<" ";
+            if(RoadNode[i][j]<10)
+                cout<<" ";
         }
         cout<<endl;
         if(i!=row-1)
@@ -185,66 +186,21 @@ int main(int argc, const char * argv[])
                 cout<<endl;
             }
     cout<<"ConnectNumber:"<<ConnectNum<<" "<<(float)ConnectNum/(pnum*(pnum-1))*100<<"%"<<endl;
-    
+}
+
+int main(int argc, const char * argv[])
+{
+    srand((unsigned)time(0));
+    int k;
+    Node p[MaxPnum];
+    Show(p);
     int smgsmg=0;
     cin>>smgsmg;
     while(smgsmg==0)
     {
         for(k=0;k<pnum;k++)
             p[k].Move();
-        for(k=0;k<pnum;k++)
-        {
-            cout<<"("<<p[k].GetM()<<","<<p[k].GetN()<<")"<<p[k].GetNodeNo()<<"-";
-            for(i=0;i<p[k].Getinfnum();i++)
-                cout<<p[k].inf[i];
-            cout<<endl;
-        }
-        for(i=0;i<row;i++)
-            for(j=0;j<col;j++)
-            {
-                cout<<RoadNode[i][j];
-                for(k=0;k<pnum;k++)
-                    if(p[k].GetM()==i&&p[k].GetN()==j)
-                        RoadNode[i][j]=p[k].GetNodeNo();
-            }
-        for(i=0;i<row;i++)
-        {
-            for(j=0;j<col;j++)
-            {
-                if(RoadNode[i][j]==0)
-                    cout<<" ";
-                else
-                    cout<<RoadNode[i][j];
-                if(j!=col-1)
-                    cout<<"  ";
-                if(RoadNode[i][j]<100)
-                    cout<<" ";
-                if(RoadNode[i][j]<10)
-                    cout<<" ";
-            }
-            cout<<endl;
-            if(i!=row-1)
-                cout<<endl;
-        }
-        for(i=0;i<pnum;i++)
-            for(j=0;j<pnum;j++)
-                p[i].Transfer(p[j]);
-        ConnectNum=0;
-        for(i=0;i<pnum;i++)
-            for(j=0;j<pnum;j++)
-                if(i!=j)
-                {
-                    cout<<"["<<p[i].GetNodeNo()<<"]->["<<p[j].GetNodeNo()<<"]  ";
-                    if(p[i].IsConnected(p[j]))
-                    {
-                        cout<<"Yes";
-                        ConnectNum++;
-                    }
-                    else
-                        cout<<"No";
-                    cout<<endl;
-                }
-        cout<<"ConnectNumber:"<<ConnectNum<<" "<<(float)ConnectNum/(pnum*(pnum-1))*100<<"%"<<endl;
+        Show(p);
         cin>>smgsmg;
     }
     return 0;
