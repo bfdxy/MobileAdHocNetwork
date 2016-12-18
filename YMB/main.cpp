@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  MANET
+//  MobileAdHocNetwork
 //
 //  Created by YMB on 2016/12/15.
 //  Copyright © 2016 YMB. All rights reserved.
