@@ -84,8 +84,8 @@ bool Node::IsConnected(Node &p)
 {
     int i;
     for(i=0;i<p.Getinfnum();i++)
-            if(p.inf[i]==NodeNo)
-                return true;
+        if(p.inf[i]==NodeNo)
+            return true;
     return false;
 }
 void Node::Move()
