@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QPainter>
-#include <string>
 #include <iostream>
 #include <QString>
 #define random1(x)(rand()%x)
@@ -42,7 +41,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void paintEvent(QPaintEvent *event,Node *p);
+    void paintEvent(QPaintEvent *event);
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

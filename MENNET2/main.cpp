@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-
-
 //
 //  main.cpp
 //  MobileAdHocNetwork
@@ -12,20 +10,16 @@
 //
 #include <ctime>
 #include <cstdlib>
-#include <iostream>
-#define random1(x)(rand()%x)
-#define MaxPnum 100
-#define MaxM 100
-#define MaxN 100
 using namespace std;
 int RoadNode[MaxM][MaxN];
-int row=6,col=6,pnum=20;
+int row=8,col=8,pnum=60;
 int num=1;
 int ConnectNum=0;
-
+Node p[MaxPnum];
 
 Node::Node()
 {
+    srand((unsigned)time(0)+num);
     m=random1(row);
     n=random1(col);
     NodeNo=num;
@@ -86,7 +80,6 @@ void Node::Move()
         x=random1(4);
         while(movefrom!=-1&&(movefrom==(x-2)||movefrom==(x+2)))
             x=random1(4);
-        cout<<x;
         switch(x)
         {
             case 0:
@@ -120,7 +113,6 @@ void Node::Move()
         }
     }
     movefrom=x;
-    cout<<" "<<movefrom<<endl;
 }
 
 void Show(Node *p)
@@ -184,9 +176,8 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     srand((unsigned)time(0));
-    int k;
-    Node p[MaxPnum];
     Show(p);
+
     w.show();
     return a.exec();
 }
