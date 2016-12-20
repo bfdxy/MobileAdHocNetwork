@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->resize( QSize( 1280,1280 ));
+    this->resize( QSize( 1440,960 ));
     Show(p);
 }
 
@@ -56,10 +56,10 @@ void MainWindow::paintEvent(QPaintEvent *event)
                     }
             }
         }
-    for(i=0;i<col;i++)
-        for(j=0;j<row;j++)
+    for(i=0;i<row;i++)
+        for(j=0;j<col;j++)
         {
-            QRectF rect(50+1200/col*i,50+1200/row*j,1200/col*0.75,1200/row*0.75);   //75+x*col=1280   1200/col
+            QRectF rect(50+1400/col*j,50+900/row*i,1400/col*0.75,900/row*0.75);
             painter.drawRect(rect);
             if(infstr[i][j].size()<6)
                 font.setPointSize(15);
