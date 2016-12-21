@@ -2,20 +2,22 @@
 #include "dialoginput.h"
 #include "widget.h"
 #include <QApplication>
+#include <QDebug>
 
 //
 //  main.cpp
 //  MobileAdHocNetwork
 //
 //  Created by YMB on 2016/12/15.
-int num=1;
-int ConnectNum=0;
 //  Copyright © 2016 YMB. All rights reserved.
 //
 int RoadNode[MaxM][MaxN];
 int row,col,pnum;
+int num=1;
+int ConnectNum=0;
 int MoveNum=0;
 float ConnectPrecent[100];
+float ConnectPrecent2[100][MaxPnum];
 Node p[MaxPnum];
 
 Node::Node()
@@ -34,6 +36,11 @@ void Node::SetNode()
     srand((unsigned)time(0)+this->GetNodeNo());
     m=random1(row);
     n=random1(col);
+    movefrom=-1;
+    infnum=1;
+    for(int i=0;i<MaxPnum;i++)
+        inf[i]=0;
+    inf[0]=NodeNo;
 }
 
 void Node::Transfer(Node &p)
@@ -122,10 +129,10 @@ void Node::Move()
     movefrom=x;
 }
 
-void Show(Node *p)
+void Show(Node *p,int pnumber=pnum)
 {
     int i,j,k;
-    for(k=0;k<pnum;k++)
+    for(k=0;k<pnumber;k++)
     {
         cout<<"("<<p[k].GetM()<<","<<p[k].GetN()<<")"<<p[k].GetNodeNo()<<"-";
         for(i=0;i<p[k].Getinfnum();i++)
@@ -136,7 +143,7 @@ void Show(Node *p)
         for(j=0;j<col;j++)
         {
             RoadNode[i][j]=0;
-            for(k=0;k<pnum;k++)
+            for(k=0;k<pnumber;k++)
                 if(p[k].GetM()==i&&p[k].GetN()==j)
                     RoadNode[i][j]=p[k].GetNodeNo();
         }
@@ -156,12 +163,12 @@ void Show(Node *p)
         if(i!=row-1)
             cout<<endl;
     }
-    for(i=0;i<pnum;i++)
-        for(j=0;j<pnum;j++)
+    for(i=0;i<pnumber;i++)
+        for(j=0;j<pnumber;j++)
             p[i].Transfer(p[j]);
     ConnectNum=0;
-    for(i=0;i<pnum;i++)
-        for(j=0;j<pnum;j++)
+    for(i=0;i<pnumber;i++)
+        for(j=0;j<pnumber;j++)
             if(i!=j)
             {
                 cout<<"["<<p[i].GetNodeNo()<<"]->["<<p[j].GetNodeNo()<<"]  ";
@@ -174,13 +181,63 @@ void Show(Node *p)
                     cout<<"No";
                 cout<<endl;
             }
-    cout<<"ConnectNumber:"<<ConnectNum<<" "<<(float)ConnectNum/(pnum*(pnum-1))*100<<"%"<<endl;
-    ConnectPrecent[MoveNum]=(float)ConnectNum/(pnum*(pnum-1))*10;
-
-    if(ConnectPrecent[MoveNum]>9.99999)
+    //cout<<"ConnectNumber:"<<ConnectNum<<" "<<(float)ConnectNum/(pnumber*(pnumber-1))*100<<"%"<<endl;
+    ConnectPrecent[MoveNum]=(float)ConnectNum/(pnumber*(pnumber-1))*10;
+    if(ConnectPrecent[MoveNum]>10)
+        ConnectPrecent[MoveNum]=0;
+    qDebug()<<MoveNum<<" "<<ConnectPrecent[MoveNum]<<"/n";
+    /*if(ConnectPrecent[MoveNum]>9.99999)
     {
         Widget *w=new Widget;
         w->show();
+    }*/
+}
+void SaveTime0()
+{
+    QFile data("C:/file.txt");
+    if(data.open(QFile::WriteOnly|QIODevice::WriteOnly))
+    {
+        QTextStream out(&data);
+        out<<"Initial time: "<<"\r\n";
+        out<<"M:"<<row<<"    "<<"N:"<<col<<"    "<<"P:"<<pnum<<"\r\n";
+        for(int i=0;i<pnum;i++)
+        {
+            out<<"Node "<<i+1<<": "<<"row: "<<p[i].GetM()<<"  "<<"col: "<<p[i].GetN()<<"\r\n";
+        }
+    }
+}
+
+void SaveTime()
+{
+    QFile data("C:/file.txt");
+    if(data.open(QFile::WriteOnly|QIODevice::Append))
+    {
+        QTextStream out(&data);
+        out<<"Time "<<MoveNum<<":"<<"\r\n";
+        for(int i=0;i<pnum;i++)
+        {
+            out<<"Node "<<i+1<<": "<<"row: "<<p[i].GetM()<<"  "<<"col: "<<p[i].GetN()<<"\r\n";
+        }
+    }
+}
+
+void ThirdProblem()
+{
+    int i,j,k;
+    for(i=1;i<pnum;i++)
+    {
+        MoveNum=0;
+        ConnectNum=0;
+        for(j=0;j<=i;j++)
+            p[j].SetNode();
+        while(ConnectNum<i*(i+1))
+        {
+            for(k=0;k<=i;k++)
+                p[k].Move();
+            Show(p,i+1);
+            ConnectPrecent2[MoveNum][i]=((float)ConnectNum/(i*(i+1)))*10;
+            MoveNum++;
+        }
     }
 }
 
@@ -188,14 +245,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     srand((unsigned)time(0));
-    DialogInput dlgi;
-
-    if(dlgi.exec()==QDialog::Accepted)
-    {
         MainWindow w;
         w.show();
         return a.exec();
-    }
-    else
         return 0;
 }
