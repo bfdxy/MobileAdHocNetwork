@@ -230,7 +230,7 @@ void ThirdProblem()
         ConnectNum=0;
         for(j=0;j<=i;j++)
             p[j].SetNode();
-        while(ConnectNum<i*(i+1))
+        while(ConnectNum<i*(i+1)&&MoveNum<MaxTime)
         {
             for(k=0;k<=i;k++)
                 p[k].Move();

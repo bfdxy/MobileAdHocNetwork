@@ -7,6 +7,7 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    this->resize(QSize(800,600));
     this->installEventFilter(this);
 }
 
@@ -15,28 +16,15 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::changeEvent(QEvent *e)
-{
-    QWidget::changeEvent(e);
-    switch(e->type())
-    {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
+
 bool Widget::eventFilter(QObject *watched, QEvent *e)
 {
     if(watched==this)
-    {
         if(e->type()==QEvent::Paint)
         {
             paintOnWidget(this);
             return true;
         }
-    }
     return QWidget::eventFilter(watched,e);
 }
 
@@ -45,9 +33,9 @@ void Widget::paintOnWidget(QWidget *w)
     QPainter painter(w);
     painter.setRenderHint(QPainter::Antialiasing,true);//设置反锯齿模式，好看一点
     QFontMetrics metrics=painter.fontMetrics();
-    int textHeight=metrics.ascent()+metrics.descent();
+    int textHeight=metrics.height();
     int leftWidth=metrics.width(tr("100"))+5;
-    int rightWidth=metrics.width(tr(""));
+    int rightWidth=metrics.width(tr("时刻"));
     int width=w->size().width()-leftWidth-rightWidth-20;
     int height=w->size().height()-3*textHeight;
     //绘制外框

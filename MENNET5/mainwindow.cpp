@@ -6,10 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->resize( QSize( 1440,960 ));
-    //Width=QMainWindow.frameGeometry().width();
+    this->resize(QSize(1440,960));
+    ui->ButtonWidget->setGeometry(0,this->size().height()-150,this->size().width(),100);
     timer=new QTimer(this);
-
 }
 
 MainWindow::~MainWindow()
@@ -19,60 +18,58 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
-
+    ui->ButtonWidget->setGeometry(0,this->size().height()-150,this->size().width(),100);
+    int i,j,k;
+    int leftWidth=50;
+    int rightWidth=200;
+    int width=this->size().width()-leftWidth-rightWidth-20;
+    int height=this->size().height()-ui->ButtonWidget->size().height()-30;
+    QString infstr[MaxM][MaxN];
     QPainter painter(this);
     QPen pen;//画笔
     QBrush brush(QColor(0,0,0,0));//painter
     pen.setColor(QColor(0,0,0));
-    QFont font("黑体",8);
     painter.setPen(pen);
     painter.setBrush(brush);
-    int i,j,k,l;
-    QString infstr[MaxM][MaxN];
     for(i=0;i<row;i++)
         for(j=0;j<col;j++)
-        {
             for(k=0;k<pnum;k++)
                 if(p[k].GetM()==i&&p[k].GetN()==j)
                 {
+                    if(infstr[i][j]!="")
+                        infstr[i][j]+=" ";
                     infstr[i][j]+=QString::number(p[k].GetNodeNo());
-                    infstr[i][j]+=" ";
                 }
-            if(infstr[i][j].size()>9)
-            {
-                infstr[i][j]="";
-                for(k=0,l=0;k<pnum;k++)
-                    if(p[k].GetM()==i&&p[k].GetN()==j)
-                    {
-                        infstr[i][j]+=QString::number(p[k].GetNodeNo());
-                        if(l==0)
-                        {
-                            infstr[i][j]+=" ";
-                            l=1;
-                        }
-                        else
-                        {
-                            infstr[i][j]+=" ";
-                            l=0;
-                        }
-                    }
-            }
-        }
     for(i=0;i<row;i++)
         for(j=0;j<col;j++)
         {
-            QRectF rect(50+1400/col*j,50+900/row*i,1400/col*0.75,900/row*0.75);
-            painter.drawRect(rect);
-            if(row>19||col>19)
-                font.setPointSize(6);
-            else if(row>14||col>14)
-                font.setPointSize(10);
-            else if(infstr[i][j].size()>5||row>9||col>9)
-                font.setPointSize(12);
-            else
-                font.setPointSize(15);
+            QFont font("黑体");
+            int FontSize=50;
+            font.setPixelSize(FontSize);
             painter.setFont(font);
-            painter.drawText(rect,Qt::TextWrapAnywhere,infstr[i][j]);
+            QFontMetrics fm=painter.fontMetrics();
+            int textHeight=fm.lineSpacing();
+            int textWidth=fm.width(infstr[i][j]);
+            int RectWidth=width/col*0.75;
+            int RectHeight=height/row*0.75;
+            if(RectWidth<FontSize*2)
+                FontSize=RectWidth;
+            if(RectHeight<FontSize)
+                FontSize=RectHeight;
+            while((textWidth/RectWidth+1)*(textHeight-fm.leading())>RectHeight&&FontSize>5)
+            {
+                FontSize-=5;
+                font.setPixelSize(FontSize);
+                painter.setFont(font);
+                fm=painter.fontMetrics();
+                textHeight=fm.lineSpacing();
+                textWidth=fm.width(infstr[i][j]);
+                RectWidth=width/col*0.75;
+                RectHeight=height/row*0.75;
+            }
+            QRectF rect(50+width/col*j,50+height/row*i,RectWidth,RectHeight);
+            painter.drawRect(rect);
+            painter.drawText(rect,Qt::AlignCenter|Qt::TextWrapAnywhere,infstr[i][j]);
         }
 }
 void MainWindow::paint()
@@ -112,7 +109,7 @@ void MainWindow::on_AutoMoveButton_clicked()
     {
         timer=new QTimer(this);
         connect(timer,SIGNAL(timeout()),this,SLOT(paint())) ;
-        timer->start(1000) ;//每隔1s
+        timer->start(500) ;//每隔0.7s
         ui->AutoMoveButton->setText("停止移动");
     }
     else

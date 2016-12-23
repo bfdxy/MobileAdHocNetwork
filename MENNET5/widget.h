@@ -17,7 +17,6 @@ public:
     ~Widget();
 
 protected:
-    virtual void changeEvent(QEvent *e);
     virtual bool eventFilter(QObject *watched, QEvent *e);
     void paintOnWidget(QWidget *w);
 

@@ -9,7 +9,6 @@ DialogInput::DialogInput(QWidget *parent) :
     ui->InputM->setRange(0,MaxM);
     ui->InputN->setRange(0,MaxN);
     ui->InputP->setRange(0,MaxPnum);
-
 }
 
 DialogInput::~DialogInput()

@@ -31,11 +31,11 @@ private slots:
     void on_MoveButton_clicked();
     void on_pushButton_clicked();
     void on_AutoMoveButton_clicked();
-
 private:
     Ui::MainWindow *ui;
     DialogInput DialogInput1 ;
     QTimer * timer ;
+
 };
 
 #endif // MAINWINDOW_H

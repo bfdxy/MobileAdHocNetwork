@@ -13,7 +13,7 @@
 #define MaxPnum 1000
 #define MaxM 150
 #define MaxN 150
-#define MaxTime 100
+#define MaxTime 50
 using namespace std;
 extern int row,col,pnum;
 extern int num;

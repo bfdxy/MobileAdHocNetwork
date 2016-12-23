@@ -7,6 +7,7 @@ Widget2::Widget2(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    this->resize(QSize(800,600));
     this->installEventFilter(this);
 }
 
@@ -15,18 +16,6 @@ Widget2::~Widget2()
     delete ui;
 }
 
-void Widget2::changeEvent(QEvent *e)
-{
-    QWidget::changeEvent(e);
-    switch(e->type())
-    {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
 bool Widget2::eventFilter(QObject *watched, QEvent *e)
 {
     if(watched==this)
